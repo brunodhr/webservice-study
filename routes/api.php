@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Models\Post;
 use Illuminate\Support\Facades\Validator;
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,23 @@ Route::post('/cadastro',function (Request $request){
     $user->token= $user->createToken($user->email)->accessToken;
 
     return $user;
+});
+
+Route::post('/publicar',function (Request $request){
+    $data = $request->all();
+    $validacao = Validator::make($data, [
+        'content' => 'required|string',
+    ]);
+
+    if($validacao->fails()){
+        return $validacao->errors();
+    }
+    
+    $post = Post::create([
+        'content' => $data['content']
+    ]);
+
+    return $post;
 });
 
 Route::post('/login',function (Request $request){
